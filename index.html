@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CYK Table Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            vertical-align: middle;
+            position: relative;
+        }
+        .index-label {
+            color: #e0e0e0;
+            font-size: 10px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            pointer-events: none;
+        }
+        .grey-row td {
+            background-color: #f0f0f0;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="number"] {
+            padding: 5px;
+            width: 100px;
+        }
+        button {
+            padding: 5px 15px;
+            margin-left: 10px;
+        }
+        @media print {
+            .controls {
+                display: none;
+            }
+            .grey-row td {
+                background-color: #f0f0f0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="nValue">Enter n:</label>
+        <input type="number" id="nValue" min="1" value="5">
+        <button onclick="generateTable()">Generate Table</button>
+    </div>
+    <div id="tableContainer"></div>
+
+    <script>
+        function generateTable() {
+            const n = parseInt(document.getElementById('nValue').value);
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = '';
+            
+            // Main CYK table
+            const mainTable = document.createElement('table');
+            for(let r = 1; r <= n; r++) {
+                const row = document.createElement('tr');
+                for(let i = 1; i <= r; i++) {
+                    const j = i + (n - r);
+                    const cell = document.createElement('td');
+                    const label = document.createElement('div');
+                    label.className = 'index-label';
+                    label.innerHTML = `V<sub>${i},${j}</sub>`;
+                    cell.appendChild(label);
+                    row.appendChild(cell);
+                }
+                mainTable.appendChild(row);
+            }
+            
+            // Grey bottom row for word input
+            const greyTable = document.createElement('table');
+            greyTable.className = 'grey-row';
+            const greyRow = document.createElement('tr');
+            for(let i = 1; i <= n; i++) {
+                const cell = document.createElement('td');
+                greyRow.appendChild(cell);
+            }
+            greyTable.appendChild(greyRow);
+            
+            container.appendChild(mainTable);
+            container.appendChild(greyTable);
+        }
+        
+        // Generate initial table
+        generateTable();
+    </script>
+</body>
+</html>
